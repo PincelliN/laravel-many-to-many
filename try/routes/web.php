@@ -1,11 +1,12 @@
 <?php
 
 use App\Http\Controllers\Admin\DashController;
-use App\Http\Controllers\admin\TypeController;
+use App\Http\Controllers\Admin\TypeController;
 use App\Http\Controllers\Guest\PageController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\WorkController;
+use App\Http\Controllers\Admin\TechnologyController;
 
 
 /*
@@ -28,7 +29,10 @@ Route::middleware(['auth','verified'])
 ->group(function(){
     Route::get('/',[DashController::class,'index'])->name('home');
     Route::resource('work', WorkController::class);
-    Route::resource('type',TypeController::class)->except(['show','edit']);
+    Route::resource('type',TypeController::class)->except(['show','edit','create']);
+    Route::resource('technology',TechnologyController::class)->except(['show','edit','create']);
+
+
 });
 
 Route::middleware('auth')->group(function () {

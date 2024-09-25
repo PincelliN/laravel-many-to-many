@@ -9,5 +9,8 @@ class Technology extends Model
 {
     use HasFactory;
 
+     public function works(){
+        return $this->belongsToMany(Work::class);
+    }
    protected $fillable=['name','slug'];
 }

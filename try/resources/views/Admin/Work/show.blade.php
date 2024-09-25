@@ -30,6 +30,12 @@
                     @else
                         <li><Strong>Progetto individuale</Strong></li>
                     @endif
+
+                    @forelse ($work->technologies as $tec)
+                        <li> <span class="badge bg-primary text-dark">{{ $tec->name }}</span></li>
+                    @empty
+                    @endforelse
+
                 </ul>
                 <a href="{{ route('admin.work.index') }}" class="card-link btn btn-secondary" title="Indietro"><i
                         class="fa-solid fa-table-cells"></i></a>

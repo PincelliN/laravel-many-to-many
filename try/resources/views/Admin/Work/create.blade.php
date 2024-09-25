@@ -72,6 +72,15 @@
                 @enderror
             </div>
         </div>
+
+        <div class="btn-group mb-3" role="group" aria-label="Basic checkbox toggle button group">
+            @foreach ($tecs as $tec)
+                <input type="checkbox" class="btn-check" id="create-tec-{{ $tec->id }}" name="technologies[]"
+                    autocomplete="off" value='{{ $tec->id }}'>
+                <label class="btn btn-outline-light" for="create-tec-{{ $tec->id }}">{{ $tec->name }}</label>
+            @endforeach
+        </div>
+
         <div class="mb-3">
             <label for="description" class="form-label">Example textarea</label>
             <textarea class="form-control" id="description" name="description" rows="3">{{ old('description') }}</textarea>

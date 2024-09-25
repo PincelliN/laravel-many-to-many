@@ -8,6 +8,7 @@ use App\Functions\Helper;
 use App\Http\Requests\WorkRequest;
 use App\Models\Work;
 use App\Models\Type;
+use App\Models\Technology;
 
 class WorkController extends Controller
 {
@@ -25,8 +26,9 @@ class WorkController extends Controller
      */
     public function create()
     {
+        $tecs=Technology::all();
         $types=Type::all();
-       return view('admin.work.create',compact('types'));
+       return view('admin.work.create',compact('types','tecs'));
     }
 
     /**
@@ -35,11 +37,15 @@ class WorkController extends Controller
     public function store(WorkRequest $request)
     {
         $data= $request->all();
-        $new_work= new Work();
         $data['slug']= Helper::generateSlug($data['title'],Work::class);
+        $new_work= new Work();
+
+
         $new_work->fill($data);
         $new_work->save();
-
+        if(array_key_exists('technologies',$data)){
+          $new_work->technologies()->attach($data['technologies']);
+        }
         return redirect()->route('admin.work.show',$new_work->id);
     }
 

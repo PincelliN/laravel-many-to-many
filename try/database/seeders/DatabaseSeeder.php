@@ -14,7 +14,10 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             TypeTableSeeder::class,
-            worktableseeder::class
+            worktableseeder::class,
+            TechnologiesTableSeeder::class,
+            technology_workTableSeeder::class
+
 
         ]);
         // \App\Models\User::factory(10)->create();

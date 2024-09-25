@@ -19,6 +19,7 @@
                     <th scope="col">Linguaggio</th>
                     <th scope="col">N_post</th>
                     <th scope="col">N_collaboratori</th>
+                    <th scope="col">Tecnologie</th>
                     <th scope="col">Azione</th>
                 </tr>
             </thead>
@@ -34,6 +35,16 @@
                         <td><span class="badge bg-success text-dark">{{ $work->type?->name }}</span></td>
                         <td>{{ $work['post'] }}</td>
                         <td>{{ $work['collaborators'] }}</td>
+                        <td>
+                            @forelse ($work->technologies as $tec)
+                                <span class="badge bg-primary text-dark">{{ $tec->name }}</span>
+                            @empty
+                                <i class="fa-solid fa-xmark"></i>
+                            @endforelse
+                        </td>
+
+
+
                         <td>
                             <a href="{{ route('admin.work.show', $work) }}" class="btn btn-success" title="Dettaglio"><i
                                     class="fa-solid fa-eye"></i></a>

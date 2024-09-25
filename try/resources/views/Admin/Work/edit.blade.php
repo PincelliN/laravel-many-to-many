@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <form action="{{ route('admin.work.update', $work) }}" method="post">
+    <form class="overflow-auto" action="{{ route('admin.work.update', $work) }}" method="post">
         @csrf
         @method('put')
         @if ($errors->any())
@@ -75,6 +75,17 @@
                 @enderror
             </div>
         </div>
+        <div class="btn-group mb-3" role="group" aria-label="Basic checkbox toggle button group">
+            {{--    Caso 1: se non ci sono errori di validazione, verifica se la tecnologia è già associata al work
+            Caso 2: se ci sono errori di validazione, recupera le tecnologie selezionate tramite old()  --}}
+            @foreach ($tecs as $tec)
+                <input type="checkbox" class="btn-check" id="create-tec-{{ $tec->id }}" name="technologies[]"
+                    autocomplete="off" value='{{ $tec->id }}' @if (
+                        (!$errors->any() && $work->technologies->contains($tec)) ||
+                            ($errors->any() && in_array($tec->id, old('technologies', [])))) checked @endif>
+                <label class="btn btn-outline-light" for="create-tec-{{ $tec->id }}">{{ $tec->name }}</label>
+            @endforeach
+        </div>
         <div class="mb-3">
             <label for="description" class="form-label">Example textarea</label>
             <textarea class="form-control" id="description" name="description" rows="3">{{ old('description', $work['description']) }}</textarea>
@@ -82,6 +93,7 @@
                 <p class="text-danger">{{ $message }}</p>
             @enderror
         </div>
+
         <button class="btn btn-success" type="submit">Invia</button>
         <button class="btn btn-danger" type="reset">Reset</button>
 

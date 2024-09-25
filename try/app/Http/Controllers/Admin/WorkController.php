@@ -17,8 +17,8 @@ class WorkController extends Controller
      */
     public function index()
     {
-        $works= Work::orderby('id')->get();
-        return view('admin.work.index',compact('works'));
+        $works = Work::orderby('id')->get();
+        return view('admin.work.index', compact('works'));
     }
 
     /**
@@ -26,9 +26,9 @@ class WorkController extends Controller
      */
     public function create()
     {
-        $tecs=Technology::all();
-        $types=Type::all();
-       return view('admin.work.create',compact('types','tecs'));
+        $tecs = Technology::all();
+        $types = Type::all();
+        return view('admin.work.create', compact('types', 'tecs'));
     }
 
     /**
@@ -36,17 +36,19 @@ class WorkController extends Controller
      */
     public function store(WorkRequest $request)
     {
-        $data= $request->all();
-        $data['slug']= Helper::generateSlug($data['title'],Work::class);
-        $new_work= new Work();
+        $data = $request->all();
+        $data['slug'] = Helper::generateSlug($data['title'], Work::class);
+        $new_work = new Work();
 
 
         $new_work->fill($data);
         $new_work->save();
-        if(array_key_exists('technologies',$data)){
-          $new_work->technologies()->attach($data['technologies']);
+        // Se esistono tecnologie associate al progetto, collegale al nuovo progetto
+        if (array_key_exists('technologies', $data)) {
+            // Aggiunge le tecnologie selezionate tramite la relazione many-to-many
+            $new_work->technologies()->attach($data['technologies']);
         }
-        return redirect()->route('admin.work.show',$new_work->id);
+        return redirect()->route('admin.work.show', $new_work->id);
     }
 
     /**
@@ -54,9 +56,9 @@ class WorkController extends Controller
      */
     public function show(Work $work)
     {
-        $work=Work::find($work->id);
+        $work = Work::find($work->id);
 
-        return view('admin.work.show',compact('work'));
+        return view('admin.work.show', compact('work'));
     }
 
     /**
@@ -64,9 +66,10 @@ class WorkController extends Controller
      */
     public function edit(Work $work)
     {
-      /*   $work=Work::find($work); */
-      $types=Type::all();
-       return view('admin.work.edit', compact('work','types'));
+        /*   $work=Work::find($work); */
+        $tecs = Technology::all();
+        $types = Type::all();
+        return view('admin.work.edit', compact('work', 'types', 'tecs'));
     }
 
     /**
@@ -74,15 +77,21 @@ class WorkController extends Controller
      */
     public function update(WorkRequest $request, Work $work)
     {
-        $data=$request->all();
+        $data = $request->all();
 
-        if($data['title'] != $work['title'] ){
-            $data['slug']= Helper::generateSlug($data['title'],Work::class);
+        if ($data['title'] != $work['title']) {
+            $data['slug'] = Helper::generateSlug($data['title'], Work::class);
         }
         $work->update($data);
-
-        return redirect()->route('admin.work.show',$work)->with('update','Il Progetto è stato aggiornato');
-
+        // Se ci sono tecnologie selezionate, aggiorna i collegamenti tra il progetto e le tecnologie
+        if (array_key_exists('technologies', $data)) {
+            // Sincronizza le tecnologie selezionate con il progetto (aggiunge o rimuove collegamenti)
+            $work->technologies()->sync($data['technologies']);
+        } else {
+            // Se nessuna tecnologia è stata selezionata, rimuove tutte le tecnologie associate
+            $work->technologies()->detach();
+        }
+        return redirect()->route('admin.work.show', $work)->with('update', 'Il Progetto è stato aggiornato');
     }
 
     /**
@@ -91,6 +100,6 @@ class WorkController extends Controller
     public function destroy(Work $work)
     {
         $work->delete();
-        return redirect()->route('admin.work.index')->with('delete','il Progetto'. $work['title'].' è stato cancellato');
+        return redirect()->route('admin.work.index')->with('delete', 'il Progetto' . $work['title'] . ' è stato cancellato');
     }
 }

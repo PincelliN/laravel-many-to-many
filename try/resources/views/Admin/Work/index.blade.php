@@ -11,14 +11,31 @@
 
             <thead>
                 <tr>
-                    <th scope="col">#id</th>
-                    <th scope="col">Titolo</th>
-                    <th scope="col">Argomento</th>
-                    <th scope="col">Data di inizio</th>
-                    <th scope="col">Data fine</th>
-                    <th scope="col">Linguaggio</th>
-                    <th scope="col">N_post</th>
-                    <th scope="col">N_collaboratori</th>
+                    <th scope="col"><a
+                            href="{{ Route('admin.work.index', ['ordinatore' => 'id', 'verso' => $verso]) }}">#id</a>
+                    </th>
+                    <th scope="col"><a
+                            href="{{ Route('admin.work.index', ['ordinatore' => 'title', 'verso' => $verso]) }}">Titolo</a>
+                    </th>
+                    <th scope="col"><a
+                            href="{{ Route('admin.work.index', ['ordinatore' => 'subject', 'verso' => $verso]) }}">Argomento</a>
+                    </th>
+                    <th scope="col"><a
+                            href="{{ Route('admin.work.index', ['ordinatore' => 'star_date', 'verso' => $verso]) }}">Data di
+                            inizio</a></th>
+                    <th scope="col"><a
+                            href="{{ Route('admin.work.index', ['ordinatore' => 'end_date', 'verso' => $verso]) }}">Data
+                            fine</a>
+                    </th>
+                    <th scope="col"><a
+                            href="{{ Route('admin.work.index', ['ordinatore' => 'type_id', 'verso' => $verso]) }}">Linguaggio</a>
+                    </th>
+                    <th scope="col"><a
+                            href="{{ Route('admin.work.index', ['ordinatore' => 'post', 'verso' => $verso]) }}">N_post</a>
+                    </th>
+                    <th scope="col"><a
+                            href="{{ Route('admin.work.index', ['ordinatore' => 'collaborators', 'verso' => $verso]) }}">N_collaboratori</a>
+                    </th>
                     <th scope="col">Tecnologie</th>
                     <th scope="col">Azione</th>
                 </tr>

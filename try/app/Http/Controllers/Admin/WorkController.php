@@ -15,10 +15,32 @@ class WorkController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $works = Work::orderby('id')->get();
-        return view('admin.work.index', compact('works'));
+
+        dump($request->get('ordinatore'), $request->get('verso'));
+
+        /* Recupera i parametri con valori di default*/
+        $ordinatore = $request->get('ordinatore', 'id');
+
+        $oldordinatore = session('OldOrdinatore');
+
+        $verso = $request->get('verso', 'desc');
+
+        /* Alterna il verso solo se 'ordinatore' è presente nella richiesta */
+        if ($ordinatore == $oldordinatore) {
+            $verso = $verso == 'asc' ? 'desc' : 'asc';
+        } else {
+            $verso = 'asc';
+        }
+
+        $works = Work::orderBy($ordinatore, $verso)->get();
+
+        session(['OldOrdinatore' => $ordinatore]);
+
+
+        // Passa i dati alla vista
+        return view('admin.work.index', compact('works', 'ordinatore', 'verso'));
     }
 
     /**

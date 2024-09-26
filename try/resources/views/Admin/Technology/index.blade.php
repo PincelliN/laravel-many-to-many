@@ -33,9 +33,10 @@
         @endif
         <form class="my-3 d-flex align-items-center" action="{{ route('admin.technology.store') }}" method="post">
             @csrf
-            <input type="text" name="name" value="{{ old('name') }}">
+            <input type="text" name="name" value="{{ $errors->any() && ' ' ? ' ' : old('name') }}">
             <button class="ms-3 btn btn-success" type="submit">Invia</button>
         </form>
+        @dump(old())
         <ul>
             @foreach ($techs as $tech)
                 <li class="d-flex align-items-center gap-3 ">
@@ -43,9 +44,12 @@
                         id='Tech-edit-{{ $tech->id }}'>
                         @csrf
                         @method('PUT')
-                        <input class="my-3 " type="text" name="name" value="{{ old('name', $tech['name']) }}">
-                    </form>
+                        <input type="hidden" name="techid" value="{{ $tech['id'] }}">
+                        <input class="my-3 " type="text" name="name"
+                            value="{{ old('techid') == $tech['id'] ? old('name', $tech['name']) : $tech['name'] }}">
 
+                    </form>
+                    {{-- se ci sono errori  e l'id attuale è uguale al id modificato allora conserva la modifica segnando la presenza del errore --}}
                     <button class="btn btn-warning" type="submit" onclick="GetTechid({{ $tech->id }})">
                         <i class="fa-solid fa-pen-to-square"></i></button>
                     <form action="{{ route('admin.technology.destroy', $tech) }}" method="post"
@@ -57,6 +61,7 @@
 
                 </li>
             @endforeach
+
         </ul>
     </div>
 

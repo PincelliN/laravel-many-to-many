@@ -18,14 +18,16 @@ class WorkController extends Controller
     public function index(Request $request)
     {
 
-        dump($request->get('ordinatore'), $request->get('verso'));
+        /*
+         dump($request->get('ordinatore'), $request->get('verso'));
+          */
 
         /* Recupera i parametri con valori di default*/
         $ordinatore = $request->get('ordinatore', 'id');
 
         $verso = $request->get('verso');
 
-        /* Alterna il verso solo se 'ordinatore' è presente nella richiesta */
+
         if ($ordinatore == session('OldOrdinatore')) {
             $verso = $verso == 'asc' ? 'desc' : 'asc';
         } else {

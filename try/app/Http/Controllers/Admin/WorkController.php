@@ -23,12 +23,10 @@ class WorkController extends Controller
         /* Recupera i parametri con valori di default*/
         $ordinatore = $request->get('ordinatore', 'id');
 
-        $oldordinatore = session('OldOrdinatore');
-
-        $verso = $request->get('verso', 'desc');
+        $verso = $request->get('verso');
 
         /* Alterna il verso solo se 'ordinatore' è presente nella richiesta */
-        if ($ordinatore == $oldordinatore) {
+        if ($ordinatore == session('OldOrdinatore')) {
             $verso = $verso == 'asc' ? 'desc' : 'asc';
         } else {
             $verso = 'asc';

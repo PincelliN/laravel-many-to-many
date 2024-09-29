@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <form class="overflow-auto" action="{{ route('admin.work.update', $work) }}" method="post">
+    <form class="overflow-auto" action="{{ route('admin.work.update', $work) }}" method="post" enctype="multipart/form-data">
         @csrf
         @method('put')
         @if ($errors->any())
@@ -18,6 +18,16 @@
             <input type="text" class="form-control" id="title" name='title' placeholder="Laravel"
                 value="{{ old('title', $work['title']) }}">
             @error('title')
+                <p class="text-danger">{{ $message }}</p>
+            @enderror
+        </div>
+        <div class="mb-3">
+            <label for="path_img" class="form-label">Immagine</label>
+            <input class="form-control" type="file" id="path_img" name="path_img" onchange="Preview(event)">
+
+            <img src="{{ asset('storage/' . $work->path_img) }}" alt="{{ $work->original_name_img }}" id="thumb"
+                class="img-thumbnail w-25 mt-2" onerror="this.src='/img/default-image.jpg'"></td>
+            @error('path_img')
                 <p class="text-danger">{{ $message }}</p>
             @enderror
         </div>
@@ -98,4 +108,10 @@
         <button class="btn btn-danger" type="reset">Reset</button>
 
     </form>
+    <script>
+        function Preview(event) {
+            const thumb = document.getElementById('thumb');
+            thumb.src = URL.createObjectURL(event.target.files[0]);
+        }
+    </script>
 @endsection

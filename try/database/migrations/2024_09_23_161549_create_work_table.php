@@ -12,10 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('works', function (Blueprint $table) {
-             $table->id();
-            $table->string('title',100);
-            $table->string('slug',100)->unique();
-            $table->string('subject',100);
+            $table->id();
+            $table->string('title', 100);
+            $table->string('path_img')->nullable();
+            $table->string('original_name_img')->nullable();
+            $table->string('slug', 100)->unique();
+            $table->string('subject', 100);
             $table->date('start_date');
             $table->date('end_date')->nullable();
             $table->tinyInteger('post');

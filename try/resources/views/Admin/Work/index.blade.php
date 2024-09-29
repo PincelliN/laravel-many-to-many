@@ -98,6 +98,7 @@
                             @endif
                         </div>
                     </th>
+                    <th scope="col">Immagine</th>
                     <th scope="col">Tecnologie</th>
                     <th scope="col">Azione</th>
                 </tr>
@@ -114,6 +115,8 @@
                         <td><span class="badge bg-success text-dark">{{ $work->type?->name }}</span></td>
                         <td>{{ $work['post'] }}</td>
                         <td>{{ $work['collaborators'] }}</td>
+                        <td> <img src="{{ asset('storage/' . $work->path_img) }}" alt="{{ $work->original_name_img }}"
+                                class="img-thumbnail w-50" onerror="this.src='/img/default-image.jpg'"></td>
                         <td>
                             @forelse ($work->technologies as $tec)
                                 <span class="badge bg-primary text-dark">{{ $tec->name }}</span>

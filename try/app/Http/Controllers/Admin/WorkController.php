@@ -9,6 +9,7 @@ use App\Http\Requests\WorkRequest;
 use App\Models\Work;
 use App\Models\Type;
 use App\Models\Technology;
+use Illuminate\Support\Facades\Storage;
 
 class WorkController extends Controller
 {
@@ -59,9 +60,21 @@ class WorkController extends Controller
     public function store(WorkRequest $request)
     {
         $data = $request->all();
+        /*   dd($data); */
         $data['slug'] = Helper::generateSlug($data['title'], Work::class);
         $new_work = new Work();
+        if (array_key_exists('path_img', $data)) {
+            //salvo l'immagine nello storege nella cartella uploads se la cartella non esiste la crea
+            $path_img = Storage::put('uplods', $data['path_img']);
+            /*
+            Ottieni il nome originale del file caricato dall'input 'path_img'
+            getClientOriginalName() recupera il nome del file così come era sul computer dell'utente prima del caricamento
+             */
+            $original_name = $request->file('path_img')->getClientOriginalName();
 
+            $data['path_img'] = $path_img;
+            $data['original_name_img'] = $original_name;
+        }
 
         $new_work->fill($data);
         $new_work->save();
@@ -104,6 +117,22 @@ class WorkController extends Controller
         if ($data['title'] != $work['title']) {
             $data['slug'] = Helper::generateSlug($data['title'], Work::class);
         }
+        if (array_key_exists('path_img', $data)) {
+            /* se carico un altra immagine al posto di quella vecchia devo cancellare la vecchia dallo storage */
+            if ($work->path_img) {
+                Storage::delete($work->path_img);
+            }
+            //salvo l'immagine nello storege nella cartella uploads se la cartella non esiste la crea
+            $path_img = Storage::put('uplods', $data['path_img']);
+            /*
+            Ottieni il nome originale del file caricato dall'input 'path_img'
+            getClientOriginalName() recupera il nome del file così come era sul computer dell'utente prima del caricamento
+             */
+            $original_name = $request->file('path_img')->getClientOriginalName();
+
+            $data['path_img'] = $path_img;
+            $data['original_name_img'] = $original_name;
+        }
         $work->update($data);
         // Se ci sono tecnologie selezionate, aggiorna i collegamenti tra il progetto e le tecnologie
         if (array_key_exists('technologies', $data)) {
@@ -121,6 +150,9 @@ class WorkController extends Controller
      */
     public function destroy(Work $work)
     {
+        if ($work->path_img) {
+            Storage::delete($work->path_img);
+        }
         $work->delete();
         return redirect()->route('admin.work.index')->with('delete', 'il Progetto' . $work['title'] . ' è stato cancellato');
     }

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <form class="overflow-auto pe-5" action="{{ route('admin.work.store') }}" method="post">
+    <form class="overflow-auto pe-5" action="{{ route('admin.work.store') }}" method="post" enctype="multipart/form-data">
         @csrf
         @if ($errors->any())
             <div class="alert alert-danger">
@@ -21,7 +21,15 @@
             @enderror
         </div>
         <div class="mb-3">
-            <label for="type" class="form-label">Titolo</label>
+            <label for="path_img" class="form-label">Immagine</label>
+            <input class="form-control" type="file" id="path_img" name="path_img" onchange="Preview(event)">
+            <img src="/img/default-image.jpg" id="thumb" class="img-thumbnail w-25 mt-2">
+            @error('path_img')
+                <p class="text-danger">{{ $message }}</p>
+            @enderror
+        </div>
+        <div class="mb-3">
+            <label for="type" class="form-label">Linguaggio utilizzato</label>
             <select class="form-select" aria-label="Default select example" name="type_id" id="type">
                 <option value="">Linguaggio utilizzato</option>
                 @foreach ($types as $type)
@@ -74,6 +82,7 @@
         </div>
 
         <div class="btn-group mb-3" role="group" aria-label="Basic checkbox toggle button group">
+
             @foreach ($tecs as $tec)
                 <input type="checkbox" class="btn-check" id="create-tec-{{ $tec->id }}" name="technologies[]"
                     autocomplete="off" value='{{ $tec->id }}' @if (in_array($tec->id, old('technologies', []))) checked @endif>
@@ -82,7 +91,7 @@
         </div>
 
         <div class="mb-3">
-            <label for="description" class="form-label">Example textarea</label>
+            <label for="description" class="form-label">Descizione</label>
             <textarea class="form-control" id="description" name="description" rows="3">{{ old('description') }}</textarea>
             @error('description')
                 <p class="text-danger">{{ $message }}</p>
@@ -92,4 +101,11 @@
         <button class="btn btn-danger" type="reset">Reset</button>
 
     </form>
+
+    <script>
+        function Preview(event) {
+            const thumb = document.getElementById('thumb');
+            thumb.src = URL.createObjectURL(event.target.files[0]);
+        }
+    </script>
 @endsection

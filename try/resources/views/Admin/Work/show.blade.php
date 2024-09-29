@@ -16,6 +16,8 @@
                 @else
                     <p class="card-text"><strong>Nussuna descrizione per questo progetto</strong></p>
                 @endif
+                <img src="{{ asset('storage/' . $work->path_img) }}" alt="{{ $work->original_name_img }}"
+                    class="img-thumbnail" onerror="this.src='/img/default-image.jpg'">
                 <ul>
                     <li>Linguaggio:{{ $work->type ? $work->type->name : '' }}</li>
                     <li>Data inizio:{{ $work->start_date }}</li>
